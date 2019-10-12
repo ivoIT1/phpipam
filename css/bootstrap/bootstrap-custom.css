@@ -566,7 +566,7 @@ td.info2 {
     text-shadow: none;
     text-align: center;
     font-size: 14px;
-    padding-top: 10px;
+    padding-top: 0px;
 }
 .hero-unit span.divider {
     padding-left: 5px;
