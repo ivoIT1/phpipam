@@ -35,6 +35,10 @@ if ($domain===false)                            { $Result->show("danger", _("Inv
 # fetch devices that use get_routing_table query
 $scan_devices = $Tools->fetch_multiple_objects ("devices", "snmp_queries", "%get_vlan_table%", "id", true, true);
 
+# all locations
+if($User->settings->enableLocations=="1")
+$locations = $Tools->fetch_all_objects ("locations", "name"); 
+
 // if none set die
 if ($scan_devices===false)                      { $Result->show("danger", _("No devices for SNMP VLAN query available"), true, true); }
 
@@ -53,7 +57,22 @@ if ($scan_devices===false)                      { $Result->show("danger", _("No 
         // loop
         foreach ($scan_devices as $d) {
             $description = strlen($d->description)>0 ? "<span class='text-muted'>$d->description</span>" : "";
-            print " <input type='checkbox' name='device-$d->id' checked> $d->hostname ($d->ip_addr) $description<br>";
+#            print " <input type='checkbox' name='device-$d->id' checked> $d->hostname ($d->ip_addr) $description<br>";
+            print " <input type='checkbox' name='device-$d->id'> $d->hostname ($d->ip_addr) ";
+	?>
+	<!-- Location -->
+	<?php if($User->settings->enableLocations=="1") { ?>
+        	<?php
+                if($locations!==false) {
+        			foreach($locations as $l) {
+        				if($d->location  == $l->id)	{ print " >> [ $l->name ]"; }
+        			}
+    			}
+    			?>
+	<?php } ?> 
+
+	<?php
+	print " $description <br>";
         }
         ?>
         <input type="hidden" name="domainId" value="<?php print $_POST['domainId']; ?>">
