@@ -79,8 +79,8 @@ if(@$_REQUEST['subnets']!="on" && @$_REQUEST['addresses']!="on" && @$_REQUEST['v
 
 	<?php } else { ?>
 
-	<a href="<?php print create_link("tools","user-menu"); ?>"><?php print _('Hi'); ?>, <?php print $User->user->real_name;  ?></a><br>
-	<span class="info"><?php print _('Logged in as'); ?>  <?php print "&nbsp;"._($User->user->role); ?></span><br>
+	<a href="<?php print create_link("tools","user-menu"); ?>"><?php print _(''); ?> <?php print $User->user->real_name;  ?></a>
+	<span class="info"><?php print _(''); ?>  <?php print "&nbsp;&nbsp;[&nbsp;"._($User->user->role)."&nbsp;]"; ?></span><br>
 
 	<!-- logout -->
 	<a  href="<?php print create_link("login"); ?>"><?php print _('Logout'); ?>  <i class="fa fa-pad-left fa-sign-out"></i></a>
