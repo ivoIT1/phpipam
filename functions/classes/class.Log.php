@@ -1789,8 +1789,8 @@ class Logging extends Common_functions {
 		$content = array();
 		$content[] = "<div style='padding:10px;'>";
 		$content[] = "<table>";
-		$content[] = "<tr><td colspan='2'>$this->mail_font_style<strong>The following change was made on ipam:</strong></font></td></tr>";
-		$content[] = "<tr><td colspan='2'>&nbsp;</td></tr>";
+		#$content[] = "<tr><td colspan='2'>$this->mail_font_style<strong>The following change was made on ipam:</strong></font></td></tr>";
+		#$content[] = "<tr><td colspan='2'>&nbsp;</td></tr>";
 		$content[] = "<tr><td>$this->mail_font_style Object type:</font><td>$this->mail_font_style".ucwords($this->object_type)."</font></td></tr>";
 		$content[] = "<tr><td>$this->mail_font_style Object details:</font><td>$this->mail_font_style_href".$details."</font></td></tr>";
 		$content[] = "<tr><td>$this->mail_font_style User:</font><td>$this->mail_font_style".$this->user->real_name." (".$this->user->username.")"."</font></td></tr>";
