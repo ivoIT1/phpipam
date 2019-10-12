@@ -80,7 +80,7 @@ if(@$_REQUEST['subnets']!="on" && @$_REQUEST['addresses']!="on" && @$_REQUEST['v
 	<?php } else { ?>
 
 	<a href="<?php print create_link("tools","user-menu"); ?>"><?php print _(''); ?> <?php print $User->user->real_name;  ?></a>
-	<span class="info"><?php print _(''); ?>  <?php print "&nbsp;&nbsp;[&nbsp;"._($User->user->role)."&nbsp;]"; ?></span>
+	<span class="info"><?php print _(''); ?>  <?php print "&nbsp;&nbsp;[&nbsp;"._($User->user->role)."&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; ?></span>
 
 	<!-- logout -->
 	<a  href="<?php print create_link("login"); ?>"><?php print _('Logout'); ?>  <i class="fa fa-pad-left fa-sign-out"></i></a>
