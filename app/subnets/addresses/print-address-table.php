@@ -115,7 +115,7 @@ $statuses = explode(";", $User->settings->pingStatus);
 ?>
 
 <!-- print title and pagenum -->
-<h4 style="margin-top:40px;">
+<h4 style="margin-top:0px;">
 <?php
 if($location==="customers") {}
 elseif(!$slaves)		{ print _("IP addresses in $location "); }
