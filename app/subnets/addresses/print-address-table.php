@@ -281,13 +281,17 @@ else {
 					        } else { $Addresses->ptr_link($addresses[$n]->id, 0); }
 					}
 					unset($dns_records);
+					$dns_recordsx = "";
+
 					if (is_array($records) || $ptr!==false) {
 						$dns_records[] = "<br>";
 						$dns_records[] = "<ul class='submenu-dns text-muted'>";
 						if(is_array($records)) {
 							foreach ($records as $r) {
-								if($r->type!="SOA" && $r->type!="NS")
+								if($r->type!="SOA" && $r->type!="NS"){
 								$dns_records[]   = "<li><i class='icon-gray fa fa-gray fa-angle-right'></i> <span class='badge badge1 badge2 editRecord' data-action='edit' data-id='$r->id' data-domain_id='$r->domain_id'>$r->type</span> $r->content </li>";
+								$dns_recordsx  = $dns_recordsx."<span class='badge badge1 badge2 editRecord' data-action='edit' data-id='$r->id' data-domain_id='$r->domain_id'>$r->type </span> ";
+								}
 							}
 						}
 						if($ptr!==false) {
@@ -298,19 +302,24 @@ else {
 						$dns_records = sizeof($dns_records)==3 ? "" : implode(" ", $dns_records);
 					} else {
 						$dns_records = "";
+						$dns_recordsx = "";
 					}
 
 					// search for IP records
 					$records2 = $PowerDNS->search_records ("content", $addresses[$n]->ip, 'content', true);
 					unset($dns_records2);
+					$dns_records2x = "";
 					if (is_array($records2)) {
                         $dns_cname_unique = array();        // unique CNAME records to prevent multiple
                         unset($cname);
 						$dns_records2[] = "<br>";
 						$dns_records2[] = "<ul class='submenu-dns text-muted'>";
 						foreach ($records2 as $r) {
-							if($r->type!="SOA" && $r->type!="NS")
+							if($r->type!="SOA" && $r->type!="NS"){
 							$dns_records2[]   = "<li><i class='icon-gray fa fa-gray fa-angle-right'></i> <span class='badge badge1 badge2 editRecord' data-action='edit' data-id='$r->id' data-domain_id='$r->domain_id'>$r->type</span> $r->name </li>";
+							if($r->type!="SOA" && $r->type!="NS" && $r->type!="PTR")
+							    $dns_records2x  = $dns_records2x."<span class='badge badge1 badge2 editRecord' data-action='edit' data-id='$r->id' data-domain_id='$r->domain_id'>$r->type </span>";
+							}
                             //search also for CNAME records
                             $dns_records_cname = $PowerDNS->seach_aliases ($r->name);
                             if(is_array($dns_records_cname)) {
@@ -333,12 +342,15 @@ else {
 						$dns_records2 = sizeof($dns_records2)==3 ? "" : implode(" ", $dns_records2);
 					} else {
 						$dns_records2 = "";
+						$dns_records2x = "";
 					}
 				}
 				// disabled
 				else {
 					$dns_records = "";
 					$dns_records2 = "";
+					$dns_recordsx = "";
+					$dns_records2x = "";
 					$button = "";
 				}
 				// add button
@@ -363,7 +375,8 @@ else {
 	                $Addresses->print_nat_link($all_nats, $all_nats_per_object, $subnet, $addresses[$n]);
 	            }
 
-			    print $dns_records2."</td>";
+			    #print $dns_records2."</td>";
+				print $dns_records2x.$dns_records2."</td>";
 
 			    # resolve dns name
 			    $resolve = $DNS->resolve_address($addresses[$n]->ip_addr, $addresses[$n]->hostname, false, $subnet['nameserverId']);
@@ -372,7 +385,8 @@ else {
 					$Addresses->update_address_hostname ($addresses[$n]->ip_addr, $addresses[$n]->id, $resolve['name']);
 					$addresses[$n]->hostname = $resolve['name'];
 				}
-																		{ print "<td class='$resolve[class] hostname'>$resolve[name] $button $dns_records</td>"; }
+																		{ print "<td class='$resolve[class] hostname'>$resolve[name] $button $dns_recordsx $dns_records</td>"; }
+																		#{ print "<td class='$resolve[class] hostname'>$resolve[name] $button $dns_records</td>"; }
 
 				# print firewall address object - mandatory if enabled
 				if(in_array('firewallAddressObject', $selected_ip_fields) && $zone) {
@@ -536,6 +550,10 @@ else {
 					print "<a class='mail_ipaddress   btn btn-xs btn-default          ' href='#' data-id='".$addresses[$n]->id."' rel='tooltip' data-container='body' title='"._('Send mail notification')."'>																																		<i class='fa fa-gray fa-envelope-o'></i></a>";
 					if(in_array('firewallAddressObject', $selected_ip_fields)) { if($zone) { print "<a class='fw_autogen	   	  btn btn-default btn-xs          ' href='#' data-subnetid='".$addresses[$n]->subnetId."' data-action='adr' data-ipid='".$addresses[$n]->id."' data-dnsname='".$addresses[$n]->hostname."' rel='tooltip' data-container='body' title='"._('Gegenerate or regenerate a firewall addres object of this ip address.')."'><i class='fa fa-gray fa-repeat'></i></a>"; }}
 					print "<a class='delete_ipaddress btn btn-xs btn-default modIPaddr' data-action='delete' data-subnetId='".$addresses[$n]->subnetId."' data-id='".$addresses[$n]->id."' href='#' id2='".$Subnets->transform_to_dotted($addresses[$n]->ip_addr)."'>		<i class='fa fa-gray fa-times'>  </i></a>";
+					print "<a class='search_ipaddress btn btn-xs btn-default        ' href= 'http://10.199.36.80/Other-Noodle.php?str=".$Addresses->transform_address($addresses[$n]->ip_addr, "dotted")."' rel='tooltip' data-container='body' target='_blank' title='"._('Search in Nedi')."'";  print ">	<i class='fa fa-gray fa-film'></i></a>";
+					print "<a class='search_ipaddress btn btn-xs btn-default        ' href= 'http://".$Addresses->transform_address($addresses[$n]->ip_addr, "dotted")."/' rel='tooltip' data-container='body' target='_blank' title='"._('Open IP as HTTP://')."'";  print ">	<i class='fa fa-gray fa-internet-explorer'></i></a>";
+					print "<a class='search_ipaddress btn btn-xs btn-default        ' href= 'https://".$Addresses->transform_address($addresses[$n]->ip_addr, "dotted")."/' rel='tooltip' data-container='body'  target='_blank' title='"._('Open IP as HTTPS://')."'";  print ">	<i class='fa fa-gray fa-lock'></i></a>";
+					print "<a class='search_ipaddress btn btn-xs btn-default        ' href= 'https://10.199.36.107:8443/PassTrixMain.cc#/Search/searchtext=".$Addresses->transform_address($addresses[$n]->ip_addr, "dotted")."&criteria=Search' rel='tooltip' data-container='body'  target='_blank' title='"._('Search in PMP')."'";  print ">	<i class='fa fa-gray fa-key'></i></a>";
 				}
 			}
 			# write not permitted
@@ -569,9 +587,9 @@ else {
 
     			if($similar!==false) {
 
-        			print "<tr class='similar similar-title'>";
-        			print " <td colspan='$colspan[unused]'>"._('Addresses linked with')." ".$User->settings->link_field." <strong>".$addresses[$n]->{$User->settings->link_field}."</strong>:</td>";
-        			print "</tr>";
+        			//print "<tr class='similar similar-title'>";
+        			//print " <td colspan='$colspan[unused]'>"._('Addresses linked with')." ".$User->settings->link_field." <strong>".$addresses[$n]->{$User->settings->link_field}."</strong>:</td>";
+        			//print "</tr>";
 
                     foreach ($similar as $k=>$s) {
 
